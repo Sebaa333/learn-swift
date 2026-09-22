@@ -7,7 +7,15 @@
 
 import SwiftUI
 
+struct NewProductDraft {
+    var name: String = ""
+    var priceText: String = ""
+    var category: String = ""
+}
+
 struct ContentView: View {
+    @State private var isShowingAddSheet = false
+    @State private var draft = NewProductDraft()
     @State private var products: [Product] = [
         Product(name: "Milk", price: 1500, category: "pantry"),
         Product(name: "Cookies", price: 2500, category: "pantry"),
@@ -20,6 +28,9 @@ struct ContentView: View {
     var body: some View {
         VStack{
             Text("Quedan \(pendingCount)")
+            Button("add") {
+                isShowingAddSheet = true
+            }
             List{
                 ForEach(products) { product in
                     HStack{
@@ -39,6 +50,11 @@ struct ContentView: View {
                 }
             }
         }
+        .sheet(isPresented: $isShowingAddSheet) {
+            AddProductView(onAdd: { newProduct in
+                products.append(newProduct)
+            })
+        }
         .padding()
     }
 }
@@ -47,12 +63,22 @@ struct ContentView: View {
     ContentView()
 }
 // TODO (next session):
-// 1. Add @State private var newProductName: String = ""
-// 2. Add a TextField above the List, bound with $newProductName
-// 3. Temporarily show newProductName in a Text to check the binding works
-// 4. Only after that: add the "Add" button (append a Product to products, clear the field)
+// Current state: Add Product modal works end-to-end (Form + Section,
+// NavigationStack, toolbar with Save/Cancel, keyboardType .decimalPad on price).
+//
+// 1. Add .disabled(draft.name.isEmpty) to the Save button
+//    (small UX win: can't save with an empty name)
+// 2. Handle the "invalid price" case for the user (right now it silently
+//    does nothing if Double(draft.priceText) fails — maybe show a message
+//    or highlight the field instead of just ignoring the tap)
+// 3. Optional styling pass: check how a native app (Reminders, Settings)
+//    handles a similar form before inventing custom colors/shapes
+// 4. Bigger feature to consider: delete a product (swipe to delete on
+//    the List, using .onDelete)
 //
 // Reminders:
-// - Xcode placeholders (blue) must be replaced, they are not real values
-// - products (array) vs product (single item inside ForEach)
-// - If Ctrl+I doesn't re-indent, check for unbalanced braces
+// - $ is ONLY for binding to interactive controls (TextField, Toggle).
+//   Reading a value to build something (like Product(...)) never uses $.
+// - products (array, plural) vs product (single item inside ForEach)
+// - NewProductDraft groups form state; Product is the domain model —
+//   keep that split when adding new fields
