@@ -13,3 +13,8 @@ Pods/
 
 # Unfinished, intentionally excluded
 BarcadoScanner/
+.DS_Store
+xcuserdata/
+*.xcuserstate
+build/
+DerivedData/

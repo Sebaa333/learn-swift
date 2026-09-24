@@ -30,7 +30,7 @@ struct AddProductView: View {
                             onAdd(Product(name: draft.name, price: price, category: draft.category))
                             dismiss()
                         }
-                    }
+                    }.disabled(draft.name.isEmpty)
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
