@@ -63,15 +63,6 @@ struct ContentView: View {
                                 Label("Delete", systemImage: "trash")
                             }
                         }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            withAnimation {
-                                product.isPurchased.toggle()
-                            }
-                        }
-                        .onTapGesture {
-                            product.isPurchased.toggle()
-                        }
                     }
                 }
             }
