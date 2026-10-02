@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct NewProductDraft {
     var name: String = ""
@@ -15,70 +16,126 @@ struct NewProductDraft {
 
 struct ContentView: View {
     @State private var isShowingAddSheet = false
-    @State private var draft = NewProductDraft()
-    @State private var products: [Product] = [
-        Product(name: "Milk", price: 1500, category: "pantry"),
-        Product(name: "Cookies", price: 2500, category: "pantry"),
-        Product(name: "Chicken", price: 5500, category: "refrigerator"),
-    ]
+    @State private var productToEdit: Product?
+    @Environment(\.modelContext) private var context
+    @Query(sort: \Product.name) private var products: [Product]
     
     private var pendingCount: Int {
         products.filter { !$0.isPurchased }.count
     }
     var body: some View {
-        VStack{
-            Text("Quedan \(pendingCount)")
-            Button("add") {
-                isShowingAddSheet = true
-            }
+        NavigationStack{
             List{
-                ForEach(products) { product in
-                    HStack{
-                        
-                        VStack(alignment: .leading){
-                            Text(product.name).strikethrough(product.isPurchased)
-                            Text(product.category).font(.caption).foregroundStyle(.secondary)
+                
+                Section("Quedan \(pendingCount)"){
+                    ForEach(products) { product in
+                        HStack {
+                            Button {
+                                withAnimation {
+                                    product.isPurchased.toggle()
+                                }
+                            } label: {
+                                Image(systemName: product.isPurchased ? "checkmark.circle.fill" : "circle")
+                                    .font(.title3)
+                                    .foregroundStyle(product.isPurchased ? .green : .secondary)
+                            }
+                            .buttonStyle(.plain)
+                            
+                            VStack(alignment: .leading) {
+                                Text(product.name)
+                                    .strikethrough(product.isPurchased)
+                                    .foregroundStyle(product.isPurchased ? .secondary : .primary)
+                                Text(product.category)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Text(product.price, format: .currency(code: "ARS"))
                         }
-                        Spacer()
-                        Text(product.price , format: .currency(code: "USD"))
-                    }
-                    .onTapGesture {
-                        if let index = products.firstIndex(where: { $0.id == product.id }) {
-                            products[index].isPurchased.toggle()
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            productToEdit = product
+                        }
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                context.delete(product)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            withAnimation {
+                                product.isPurchased.toggle()
+                            }
+                        }
+                        .onTapGesture {
+                            product.isPurchased.toggle()
                         }
                     }
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Text("Shopping List")
+                        .font(.title.bold())
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Add", systemImage: "plus") {
+                        isShowingAddSheet = true
+                    }
+                }
+            }
+            .overlay {
+                if products.isEmpty {
+                    ContentUnavailableView(
+                        "Tu lista está vacía",
+                        systemImage: "cart",
+                        description: Text("Tocá + para agregar tu primer producto")
+                    )
                 }
             }
         }
         .sheet(isPresented: $isShowingAddSheet) {
             AddProductView(onAdd: { newProduct in
-                products.append(newProduct)
+                context.insert(newProduct)
             })
         }
-        .padding()
+        .sheet(item: $productToEdit) { product in
+            AddProductView(productToEdit: product)
+        }
+        
     }
 }
 
 #Preview {
     ContentView()
+        .modelContainer(for: Product.self, inMemory: true)
 }
-// TODO (next session):
-// Current state: Add Product modal works end-to-end (Form + Section,
-// NavigationStack, toolbar with Save/Cancel, keyboardType .decimalPad on price).
+
+//Shopping-List: estado al 2/10
 //
-// 1. Add .disabled(draft.name.isEmpty) to the Save button
-//    (small UX win: can't save with an empty name)
-// 2. Handle the "invalid price" case for the user (right now it silently
-//    does nothing if Double(draft.priceText) fails — maybe show a message
-//    or highlight the field instead of just ignoring the tap)
-// 3. Optional styling pass: check how a native app (Reminders, Settings)
-//    handles a similar form before inventing custom colors/shapes
-// 4. Bigger feature to consider: delete a product (swipe to delete on
-//    the List, using .onDelete)
+//Hecho:
 //
-// Reminders:
-// - $ is ONLY for binding to interactive controls (TextField, Toggle).
-//   Reading a value to build something (like Product(...)) never uses $.
-// - products (array, plural) vs product (single item inside ForEach)
-// - NewProductDraft groups form state; Product is the domain model —
-//   keep that split when adding new fields
+//Persistencia con SwiftData: @Model, .modelContainer en la App, @Query y context.insert en ContentView.
+//UI: título custom con + en la toolbar, Section con contador de pendientes, empty state con ContentUnavailableView y precios en ARS.
+//Círculo de check como botón propio para marcar como comprado.
+//Swipe to delete con .swipeActions.
+//Editar: tocar la fila abre AddProductView con los datos cargados, usando .sheet(item:) y un draft.
+//
+//Para verificar al arrancar:
+//
+//Probar en el simulador: agregar, editar, Cancel (que no cambie nada), borrar, y cerrar y reabrir la app para confirmar que persiste.
+//Opcional: renombrar AddProductView a ProductFormView (Refactor → Rename).
+//
+//Pendientes conocidos (para el punto 5, validación):
+//
+//Precio con coma (1500,50): Double() devuelve nil y Save no hace nada sin avisar.
+//Al editar, el precio aparece como 1500.0.
+//
+//Próximo paso: MVVM
+//
+//Crear ShoppingListViewModel y sacar la lógica de la View: pendingCount, el empty state, agregar, togglear y borrar.
+//Pregunta guía: "¿esto es dato, lógica o presentación?"
+//
+//Después: categorías y múltiples listas → validaciones → #Preview prolijos → README con capturas.

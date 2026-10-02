@@ -6,11 +6,19 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Product: Identifiable {
-    let id = UUID()
-    let name: String
+@Model
+final class Product {
+    var name: String
     var price: Double
     var category: String
-    var isPurchased: Bool = false
+    var isPurchased: Bool
+    
+    init(name: String, price: Double, category: String, isPurchased: Bool = false) {
+        self.name = name
+        self.price = price
+        self.category = category
+        self.isPurchased = isPurchased
+    }
 }
