@@ -15,24 +15,24 @@ struct NewProductDraft {
 }
 
 struct ContentView: View {
+    @State private var viewModel: ShoppingListViewModel
     @State private var isShowingAddSheet = false
     @State private var productToEdit: Product?
-    @Environment(\.modelContext) private var context
-    @Query(sort: \Product.name) private var products: [Product]
     
-    private var pendingCount: Int {
-        products.filter { !$0.isPurchased }.count
+    init(viewModel: ShoppingListViewModel) {
+        _viewModel = State(initialValue: viewModel)
     }
+    
     var body: some View {
         NavigationStack{
             List{
                 
-                Section("Quedan \(pendingCount)"){
-                    ForEach(products) { product in
+                Section("Quedan \(viewModel.pendingCount)"){
+                    ForEach(viewModel.products) { product in
                         HStack {
                             Button {
                                 withAnimation {
-                                    product.isPurchased.toggle()
+                                    viewModel.toggle(product)
                                 }
                             } label: {
                                 Image(systemName: product.isPurchased ? "checkmark.circle.fill" : "circle")
@@ -58,7 +58,7 @@ struct ContentView: View {
                         }
                         .swipeActions {
                             Button(role: .destructive) {
-                                context.delete(product)
+                                viewModel.delete(product)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
@@ -78,7 +78,7 @@ struct ContentView: View {
                 }
             }
             .overlay {
-                if products.isEmpty {
+                if viewModel.shouldShowEmptyState {
                     ContentUnavailableView(
                         "Tu lista está vacía",
                         systemImage: "cart",
@@ -89,10 +89,10 @@ struct ContentView: View {
         }
         .sheet(isPresented: $isShowingAddSheet) {
             AddProductView(onAdd: { newProduct in
-                context.insert(newProduct)
+                viewModel.add(newProduct)
             })
         }
-        .sheet(item: $productToEdit) { product in
+        .sheet(item: $productToEdit, onDismiss: { viewModel.fetchProducts() }) { product in
             AddProductView(productToEdit: product)
         }
         
@@ -100,33 +100,10 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-        .modelContainer(for: Product.self, inMemory: true)
+    let container = try! ModelContainer(
+        for: Product.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    return ContentView(viewModel: ShoppingListViewModel(context: container.mainContext))
+        .modelContainer(container)
 }
-
-//Shopping-List: estado al 2/10
-//
-//Hecho:
-//
-//Persistencia con SwiftData: @Model, .modelContainer en la App, @Query y context.insert en ContentView.
-//UI: título custom con + en la toolbar, Section con contador de pendientes, empty state con ContentUnavailableView y precios en ARS.
-//Círculo de check como botón propio para marcar como comprado.
-//Swipe to delete con .swipeActions.
-//Editar: tocar la fila abre AddProductView con los datos cargados, usando .sheet(item:) y un draft.
-//
-//Para verificar al arrancar:
-//
-//Probar en el simulador: agregar, editar, Cancel (que no cambie nada), borrar, y cerrar y reabrir la app para confirmar que persiste.
-//Opcional: renombrar AddProductView a ProductFormView (Refactor → Rename).
-//
-//Pendientes conocidos (para el punto 5, validación):
-//
-//Precio con coma (1500,50): Double() devuelve nil y Save no hace nada sin avisar.
-//Al editar, el precio aparece como 1500.0.
-//
-//Próximo paso: MVVM
-//
-//Crear ShoppingListViewModel y sacar la lógica de la View: pendingCount, el empty state, agregar, togglear y borrar.
-//Pregunta guía: "¿esto es dato, lógica o presentación?"
-//
-//Después: categorías y múltiples listas → validaciones → #Preview prolijos → README con capturas.

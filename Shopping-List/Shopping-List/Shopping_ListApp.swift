@@ -10,10 +10,16 @@ import SwiftData
 
 @main
 struct Shopping_ListApp: App {
+    let container: ModelContainer
+    
+    init() {
+        container = try! ModelContainer(for: Product.self)
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: ShoppingListViewModel(context: container.mainContext))
         }
-        .modelContainer(for: Product.self)
+        .modelContainer(container)
     }
 }
