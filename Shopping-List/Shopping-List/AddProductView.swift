@@ -6,50 +6,42 @@
 //
 import SwiftUI
 struct AddProductView: View {
-    @State private var draft = NewProductDraft()
+    @State private var form: ProductFormViewModel
     @Environment(\.dismiss) private var dismiss
     
-    var productToEdit: Product? = nil
-    var onAdd: (Product) -> Void = { _ in }
+    var onAdd: (Product) -> Void
     
-    private var isEditing: Bool { productToEdit != nil }
+    init(productToEdit: Product? = nil, onAdd: @escaping (Product) -> Void = { _ in }) {
+        _form = State(initialValue: ProductFormViewModel(productToEdit: productToEdit))
+        self.onAdd = onAdd
+    }
     
     var body: some View {
         NavigationStack {
             Form {
                 Section("Product Info") {
-                    TextField("Add Product", text: $draft.name)
-                    TextField("Add price", text: $draft.priceText)
+                    TextField("Add Product", text: $form.name)
+                    TextField("Add price", text: $form.priceText)
                         .keyboardType(.decimalPad)
-                    TextField("Add Category", text: $draft.category)
+                    if let error = form.priceError {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                    TextField("Add Category", text: $form.category)
                 }
             }
-            .navigationTitle(isEditing ? "Edit Product" : "New Product")
+            .navigationTitle(form.isEditing ? "Edit Product" : "New Product")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        if let price = Double(draft.priceText) {
-                            if let product = productToEdit {
-                                product.name = draft.name
-                                product.price = price
-                                product.category = draft.category
-                            } else {
-                                onAdd(Product(name: draft.name, price: price, category: draft.category))
-                            }
-                            dismiss()
-                        }
+                        form.save(onCreate: onAdd)
+                        dismiss()
                     }
-                    .disabled(draft.name.isEmpty)
+                    .disabled(!form.isValid)
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
-                }
-            }
-            .onAppear {
-                if let product = productToEdit {
-                    draft.name = product.name
-                    draft.priceText = String(product.price)
-                    draft.category = product.category
                 }
             }
         }

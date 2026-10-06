@@ -8,12 +8,6 @@
 import SwiftUI
 import SwiftData
 
-struct NewProductDraft {
-    var name: String = ""
-    var priceText: String = ""
-    var category: String = ""
-}
-
 struct ContentView: View {
     @State private var viewModel: ShoppingListViewModel
     @State private var isShowingAddSheet = false
