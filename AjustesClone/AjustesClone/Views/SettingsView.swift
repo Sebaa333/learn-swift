@@ -13,7 +13,7 @@ struct SettingsView: View {
             List{
                 Section{
                     NavigationLink{
-                        Text("Here is the Profile View")
+                        ProfileDetailView(name: "Sebastian Santivanez", caption: "Sebastian@gmail.com",)
                     }label:{
                         ProfileRow(name: "Sebastian Santivanez", caption: "ios developer")
                         
