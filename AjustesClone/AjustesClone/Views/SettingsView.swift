@@ -21,19 +21,19 @@ struct SettingsView: View {
                 }
                 Section{
                     NavigationLink{
-                        Text("Here is the airplane View")
+                        AirplaneDetailView()
                     }label:{
                         SettingsRowView(name: "Airplane Mode", color: .orange, icon: "airplane")
                         
                     }
                     NavigationLink{
-                        Text("Here is the wifi View")
+                        WifiDetailView()
                     }label:{
                         SettingsRowView(name: "Wi-Fi", color: .blue, icon: "wifi")
                     }
                     
                     NavigationLink{
-                        Text("Here is the Bluetooth View")
+                        BluetoothDetailView()
                     }label:{
                         SettingsRowView(name: "Bluetooth", color: .blue, icon: "wave.3.right")
                     }
