@@ -15,7 +15,7 @@ struct SettingsView: View {
                     NavigationLink{
                         ProfileDetailView(name: "Sebastian Santivanez", caption: "Sebastian@gmail.com",)
                     }label:{
-                        ProfileRow(name: "Sebastian Santivanez", caption: "ios developer")
+                        ProfileRowView(name: "Sebastian Santivanez", caption: "ios developer")
                         
                     }
                 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProfileRow: View {
+struct ProfileRowView: View {
     
     let name: String
     let caption: String
@@ -55,5 +55,5 @@ struct ProfileRow: View {
 }
 
 #Preview {
-    ProfileRow(name: "Sebastian Santivanez", caption: "ios developer",)
+    ProfileRowView(name: "Sebastian Santivanez", caption: "ios developer",)
 }
