@@ -8,11 +8,34 @@
 import SwiftUI
 
 struct DisplayDetailView: View {
+    @State private var appearance = "Light"
+    @State private var brightness = 0.7
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            Section("Appearance") {
+                Picker("Appearance", selection: $appearance) {
+                    Text("Light").tag("Light")
+                    Text("Dark").tag("Dark")
+                }
+                .pickerStyle(.segmented)
+            }
+            
+            Section("Brightness") {
+                HStack {
+                    Image(systemName: "sun.min")
+                    Slider(value: $brightness, in: 0...1)
+                    Image(systemName: "sun.max")
+                }
+            }
+        }
+        .navigationTitle("Display & Brightness")
+        .preferredColorScheme(appearance == "Dark" ? .dark : .light)
     }
 }
 
 #Preview {
-    DisplayDetailView()
+    NavigationStack {
+        DisplayDetailView()
+    }
 }

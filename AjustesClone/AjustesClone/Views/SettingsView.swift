@@ -46,7 +46,7 @@ struct SettingsView: View {
                         SettingsRowView(name: "General", color: .gray, icon: "gear")
                     }
                     NavigationLink{
-                        Text("Here is the Display and Brightess View")
+                        DisplayDetailView()
                     }label:{
                         SettingsRowView(name: "Display and Brightness", color: .blue, icon: "sun.max.fill")
                     }
