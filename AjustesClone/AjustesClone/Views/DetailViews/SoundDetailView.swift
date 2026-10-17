@@ -8,11 +8,27 @@
 import SwiftUI
 
 struct SoundDetailView: View {
+    @State private var volume = 0.5
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List{
+            Section("Ringtone and alets"){
+                HStack{
+                    Image(systemName: "speaker.fill")
+                    
+                    Slider(value: $volume, in: 0...1)
+                    
+                    Image(systemName: "speaker.wave.3.fill")
+                }
+                
+                Text("Volume: \(Int(volume * 100))%")
+            }
+        }
+        .navigationTitle("Sounds")
     }
 }
 
 #Preview {
-    SoundDetailView()
+    NavigationStack{
+        SoundDetailView()
+    }
 }

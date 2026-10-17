@@ -51,7 +51,7 @@ struct SettingsView: View {
                         SettingsRowView(name: "Display and Brightness", color: .blue, icon: "sun.max.fill")
                     }
                     NavigationLink{
-                        Text("Here is the sound View")
+                       SoundDetailView()
                     }label:{
                         SettingsRowView(name: "Sounds", color: .pink, icon: "speaker.wave.3.fill")
                     }
