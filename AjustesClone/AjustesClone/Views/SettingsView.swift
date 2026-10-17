@@ -41,7 +41,7 @@ struct SettingsView: View {
                 }
                 Section{
                     NavigationLink{
-                        Text("Here is the General View")
+                        GeneralDetailView()
                     }label:{
                         SettingsRowView(name: "General", color: .gray, icon: "gear")
                     }
