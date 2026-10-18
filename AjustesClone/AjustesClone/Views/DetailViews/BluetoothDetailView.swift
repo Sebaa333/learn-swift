@@ -7,17 +7,17 @@
 import SwiftUI
 
 struct BluetoothDetailView: View {
-    @State private var isOn = false
+    @Bindable var store: SettingsStore
     
     var body: some View {
         List {
             Section {
-                Toggle(isOn: $isOn) {
+                Toggle(isOn: $store.isBluetoothOn) {
                     SettingsRowView(name: "Bluetooth", color: .blue, icon: "wave.3.right")
                 }
             }
             
-            if isOn {
+            if store.isBluetoothOn {
                 Section("Mis dispositivos") {
                     BluetoothRowView(name: "AirPods", isConnected: true)
                     BluetoothRowView(name: "Parlante JBL", isConnected: false)
@@ -25,12 +25,12 @@ struct BluetoothDetailView: View {
             }
         }
         .navigationTitle("Bluetooth")
-        .animation(.default, value: isOn)
+        .animation(.default, value: store.isBluetoothOn)
     }
 }
 
 #Preview {
     NavigationStack {
-        BluetoothDetailView()
+        BluetoothDetailView(store:SettingsStore())
     }
 }

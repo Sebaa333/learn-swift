@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SettingsView: View {
+    
+    @State private var store = SettingsStore()
+    
     var body: some View {
         NavigationStack{
             List{
@@ -21,21 +24,36 @@ struct SettingsView: View {
                 }
                 Section{
                     NavigationLink{
-                        AirplaneDetailView()
+                        AirplaneDetailView(store: store)
                     }label:{
-                        SettingsRowView(name: "Airplane Mode", color: .orange, icon: "airplane")
+                        HStack{
+                            SettingsRowView(name: "Airplane Mode", color: .orange, icon: "airplane")
+                            Spacer()
+                            Text(store.isAirplaneModeOn ? "On": "Off")
+                                .foregroundStyle(.secondary)
+                        }
                         
                     }
                     NavigationLink{
-                        WifiDetailView()
+                        WifiDetailView(store: store)
                     }label:{
-                        SettingsRowView(name: "Wi-Fi", color: .blue, icon: "wifi")
+                        HStack{
+                            SettingsRowView(name: "Wi-Fi", color: .blue, icon: "wifi")
+                            Spacer()
+                            Text(store.isWifiOn ? "On" : "Off")
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     
                     NavigationLink{
-                        BluetoothDetailView()
+                        BluetoothDetailView(store: store)
                     }label:{
-                        SettingsRowView(name: "Bluetooth", color: .blue, icon: "wave.3.right")
+                        HStack{
+                            SettingsRowView(name: "Bluetooth", color: .blue, icon: "wave.3.right")
+                            Spacer()
+                            Text(store.isBluetoothOn ? "On": "Off")
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     
                 }
@@ -51,7 +69,7 @@ struct SettingsView: View {
                         SettingsRowView(name: "Display and Brightness", color: .blue, icon: "sun.max.fill")
                     }
                     NavigationLink{
-                       SoundDetailView()
+                        SoundDetailView()
                     }label:{
                         SettingsRowView(name: "Sounds", color: .pink, icon: "speaker.wave.3.fill")
                     }

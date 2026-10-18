@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct AirplaneDetailView: View {
-    @State private var isOn = false
+    @Bindable var store: SettingsStore
     
     var body: some View {
         List{
-            Toggle(isOn: $isOn) {
+            Toggle(isOn: $store.isAirplaneModeOn) {
             
                 SettingsRowView(name: "Airplane Mode", color: .orange, icon: "airplane")
             }
@@ -24,6 +24,6 @@ struct AirplaneDetailView: View {
 
 #Preview {
     NavigationStack {
-        AirplaneDetailView()
+        AirplaneDetailView(store: SettingsStore())
     }
 }

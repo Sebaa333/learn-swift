@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct WifiDetailView: View {
-    @State private var isOn = false
+    @Bindable var store: SettingsStore
     
     var body: some View {
         List{
             Section{
-                Toggle(isOn: $isOn) {
+                Toggle(isOn: $store.isWifiOn) {
                     SettingsRowView(name: "Wi-Fi", color: .blue, icon: "wifi")
                 }
                 
@@ -23,7 +23,7 @@ struct WifiDetailView: View {
                     NetworkRowView(name: "Red wifi 2 ", isLocked: false)
                     NetworkRowView(name: "Red wifi 3 ", isLocked: false)
             }
-            if isOn{
+            if store.isWifiOn{
                 Section("redes nuevas "){
                     NetworkRowView(name: "Red wifi 4 ", isLocked: true)
                     NetworkRowView(name: "Red wifi 5 ", isLocked: true)
@@ -34,13 +34,12 @@ struct WifiDetailView: View {
             
         }
         .navigationTitle("Wi-Fi")
-        .animation(.default, value: isOn)
+        .animation(.default, value: store.isWifiOn)
     }
 }
 
 #Preview {
     NavigationStack{
-        
-        WifiDetailView()
+        WifiDetailView(store:SettingsStore())
     }
 }
