@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfileDetailView: View {
     let name: String
-    let caption: String
+    let email: String
     
     var body: some View {
         List{
@@ -25,7 +25,7 @@ struct ProfileDetailView: View {
                 
                 Text(name)
                     .font(.headline)
-                Text(caption)
+                Text(email)
                     .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity)
@@ -53,5 +53,5 @@ struct ProfileDetailView: View {
 }
 
 #Preview {
-    ProfileDetailView(name: "Sebastian Santivanez", caption: "Sebastian@gmail.com",)
+    ProfileDetailView(name: "Sebastian Santivanez", email: "Sebastian@gmail.com",)
 }

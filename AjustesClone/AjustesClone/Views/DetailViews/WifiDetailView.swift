@@ -18,13 +18,13 @@ struct WifiDetailView: View {
                 }
                 
             }
-            Section("red conocida"){
+            Section("know networks"){
                     NetworkRowView(name: "Red wifi 1 ", isLocked: false)
                     NetworkRowView(name: "Red wifi 2 ", isLocked: false)
                     NetworkRowView(name: "Red wifi 3 ", isLocked: false)
             }
             if store.isWifiOn{
-                Section("redes nuevas "){
+                Section("new networks"){
                     NetworkRowView(name: "Red wifi 4 ", isLocked: true)
                     NetworkRowView(name: "Red wifi 5 ", isLocked: true)
                     NetworkRowView(name: "Red wifi 6 ", isLocked: true)

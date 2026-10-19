@@ -27,4 +27,7 @@ class SettingsStore {
             }
         }
     }
+    var profile = UserProfile(name: "Sebastian Santivanez",
+                              email: "sebastian@gmail.com",
+                              caption: "iOS Developer")
 }

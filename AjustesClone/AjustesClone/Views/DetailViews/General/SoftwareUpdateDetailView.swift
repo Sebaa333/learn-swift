@@ -12,7 +12,7 @@ struct SoftwareUpdateDetailView: View {
     
     var body: some View {
         List {
-            // Encabezado
+            
             Section {
                 VStack(spacing: 8) {
                     Image(systemName: "gear.badge")
@@ -35,8 +35,6 @@ struct SoftwareUpdateDetailView: View {
                 .frame(maxWidth: .infinity)
                 .listRowBackground(Color.clear)
             }
-            
-            // Botón
             Section {
                 Button("Check for Updates") {
                     isChecking = true

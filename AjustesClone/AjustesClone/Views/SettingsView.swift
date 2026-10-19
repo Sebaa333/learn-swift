@@ -16,9 +16,9 @@ struct SettingsView: View {
             List{
                 Section{
                     NavigationLink{
-                        ProfileDetailView(name: "Sebastian Santivanez", caption: "Sebastian@gmail.com",)
+                        ProfileDetailView(name: store.profile.name, email: store.profile.email)
                     }label:{
-                        ProfileRowView(name: "Sebastian Santivanez", caption: "ios developer")
+                        ProfileRowView(name: store.profile.name, caption: store.profile.caption)
                         
                     }
                 }
