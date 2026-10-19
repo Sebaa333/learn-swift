@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  SettingView.swift
 //  AjustesClone
 //
 //  Created by sebastian santivanez on 08/10/2026.
@@ -22,63 +22,61 @@ struct SettingsView: View {
                         
                     }
                 }
-                Section{
-                    NavigationLink{
-                        AirplaneDetailView(store: store)
-                    }label:{
-                        HStack{
-                            SettingsRowView(name: "Airplane Mode", color: .orange, icon: "airplane")
-                            Spacer()
-                            Text(store.isAirplaneModeOn ? "On": "Off")
-                                .foregroundStyle(.secondary)
-                        }
-                        
-                    }
-                    NavigationLink{
-                        WifiDetailView(store: store)
-                    }label:{
-                        HStack{
-                            SettingsRowView(name: "Wi-Fi", color: .blue, icon: "wifi")
-                            Spacer()
-                            Text(store.isWifiOn ? "On" : "Off")
-                                .foregroundStyle(.secondary)
+                Section {
+                    ForEach(SettingOption.connectivity) { option in
+                        NavigationLink(value: option.screen) {
+                            HStack {
+                                SettingsRowView(name: option.name, color: option.color, icon: option.icon)
+                                Spacer()
+                                if let status = status(for: option.screen) {
+                                    Text(status)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
                         }
                     }
-                    
-                    NavigationLink{
-                        BluetoothDetailView(store: store)
-                    }label:{
-                        HStack{
-                            SettingsRowView(name: "Bluetooth", color: .blue, icon: "wave.3.right")
-                            Spacer()
-                            Text(store.isBluetoothOn ? "On": "Off")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    
                 }
-                Section{
-                    NavigationLink{
-                        GeneralDetailView()
-                    }label:{
-                        SettingsRowView(name: "General", color: .gray, icon: "gear")
+                Section {
+                    ForEach(SettingOption.general) { option in
+                        NavigationLink(value: option.screen) {
+                            HStack {
+                                SettingsRowView(name: option.name, color: option.color, icon: option.icon)
+                                Spacer()
+                                if let status = status(for: option.screen) {
+                                    Text(status)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
                     }
-                    NavigationLink{
-                        DisplayDetailView()
-                    }label:{
-                        SettingsRowView(name: "Display and Brightness", color: .blue, icon: "sun.max.fill")
-                    }
-                    NavigationLink{
-                        SoundDetailView()
-                    }label:{
-                        SettingsRowView(name: "Sounds", color: .pink, icon: "speaker.wave.3.fill")
-                    }
-                    
                 }
             }
             .navigationTitle("Settings")
+            .navigationDestination(for: SettingScreen.self) { screen in
+                destination(for: screen)
+            }
         }
         
+    }
+    func status(for screen: SettingScreen) -> String? {
+        switch screen {
+            case .airplane: return store.isAirplaneModeOn ? "On" : "Off"
+            case .wifi: return store.isWifiOn ? "On" : "Off"
+            case .bluetooth: return store.isBluetoothOn ? "On" : "Off"
+            default: return nil
+        }
+    }
+    
+    @ViewBuilder
+    func destination(for screen: SettingScreen) -> some View {
+        switch screen {
+            case .airplane: AirplaneDetailView(store: store)
+            case .wifi: WifiDetailView(store: store)
+            case .bluetooth: BluetoothDetailView(store: store)
+            case .general: GeneralDetailView()
+            case .display: DisplayDetailView()
+            case .sounds: SoundDetailView()
+        }
     }
 }
 
