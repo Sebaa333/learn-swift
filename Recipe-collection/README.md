@@ -1,18 +1,18 @@
 # Recipe Collection
 
-Recipe Collection is a SwiftUI iOS app for browsing recipes from [TheMealDB](https://www.themealdb.com/). You can search recipes as you type, filter them by category, open a recipe to see its ingredients and instructions, and save favorites on the device with SwiftData.
+Recipe Collection es una app de iOS hecha con SwiftUI para explorar recetas de [TheMealDB](https://www.themealdb.com/). Permite buscar recetas mientras escribís, filtrarlas por categoría, abrir una receta para ver sus ingredientes e instrucciones, y guardar favoritas en el dispositivo con SwiftData.
 
-## Features
+## Funcionalidades
 
-- Browse recipes
-- Live search with debounce
-- Filter by category
-- Infinite scroll, paginated locally (TheMealDB has no pagination)
-- Recipe detail: image, category, area, ingredients, and instructions
-- Favorites persisted with SwiftData, with swipe to delete
-- Loading, empty, and error states, with a retry button on errors
+- Explorar recetas
+- Búsqueda en vivo con debounce
+- Filtro por categoría
+- Scroll infinito con paginación local (TheMealDB no tiene paginación)
+- Detalle de la receta: imagen, categoría, origen, ingredientes e instrucciones
+- Favoritos guardados con SwiftData, con swipe para borrar
+- Estados de carga, vacío y error, con botón para reintentar
 
-## Tech Stack
+## Tecnologías
 
 - Swift
 - SwiftUI
@@ -20,9 +20,9 @@ Recipe Collection is a SwiftUI iOS app for browsing recipes from [TheMealDB](htt
 - `@Observable`
 - async/await
 - SwiftData
-- TheMealDB API
+- API de TheMealDB
 
-## Project Structure
+## Estructura del proyecto
 
 ```
 Recipe-collection/
@@ -48,30 +48,30 @@ Recipe-collection/
         └── MealListView.swift
 ```
 
-## Screenshots
+## Capturas
 
-Screenshots will be added soon.
+Las capturas se van a agregar pronto.
 
-| List | Detail | Favorites |
+| Listado | Detalle | Favoritos |
 | --- | --- | --- |
-| ![List](screenshots/list.png) | ![Detail](screenshots/detail.png) | ![Favorites](screenshots/favorites.png) |
+| ![Listado](screenshots/list.png) | ![Detalle](screenshots/detail.png) | ![Favoritos](screenshots/favorites.png) |
 
-## How to Run
+## Cómo correrla
 
-1. Clone the repository.
-2. Open `Recipe-collection.xcodeproj` in Xcode.
-3. Run the app on an iOS 17+ simulator.
+1. Cloná el repositorio.
+2. Abrí `Recipe-collection.xcodeproj` en Xcode.
+3. Corré la app en un simulador con iOS 17 o superior.
 
-No API key is required.
+No hace falta ninguna API key.
 
-## What I Learned
+## Qué aprendí
 
-- MVVM with `@Observable`
-- Networking with async/await
-- Debounced search with `.task(id:)`
-- Local pagination on top of an API that returns every result at once
-- Persistence with SwiftData
+- MVVM con `@Observable`
+- Llamadas de red con async/await
+- Búsqueda con debounce usando `.task(id:)`
+- Paginación local sobre una API que devuelve todos los resultados de una vez
+- Persistencia con SwiftData
 
-## Credits
+## Créditos
 
-Recipe data and images are provided by [TheMealDB](https://www.themealdb.com/).
+Los datos y las imágenes de las recetas son de [TheMealDB](https://www.themealdb.com/).
